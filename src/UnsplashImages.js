@@ -8,34 +8,30 @@ const TEST_MODE = process.env.NODE_ENV === 'development' && process.env.REACT_AP
 
 const ACCESS_KEY = process.env.REACT_APP_UNSPLASH_ACCESS_KEY;
 
-// Get images from the Unsplash API.
-export async function getImages(page = 1){
+const unsplash = createApi({
+    accessKey: ACCESS_KEY,
+    fetch, // Unsplash API needs a fetch polyfill when being used in the browser.
+});
 
-    const unsplash = createApi({
-        accessKey: ACCESS_KEY,
-        fetch, // Unsplash API needs a fetch polyfill when being used in the browser.
-    });
+
+// Get images from the Unsplash API.
+export async function getImages(perPage=20, page = 1){
     
     const {response} = await unsplash.photos.list({
         page: TEST_MODE? 1 : page,
-        perPage: 30,
+        perPage,
     });
 
     return response.results;
 }
 
 // Search for images using the Unsplash API. 
-export async function getSearchImages(query='', page = 1){
-
-    const unsplash = createApi({
-        accessKey: ACCESS_KEY,
-        fetch, // Unsplash API needs a fetch polyfill when being used in the browser.
-    });
+export async function getSearchImages(query='', perPage=20, page = 1){
     
     const {response} = await unsplash.search.getPhotos({
         query,
         page: TEST_MODE? 1 : page,
-        perPage: 30,
+        perPage,
     });
 
     return response.results;

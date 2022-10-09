@@ -12,6 +12,9 @@ import Search from './Search';
 // If there are only [LOAD_MORE_THRESHOLD] pixels left to be scrolled, start loading next images.
 const LOAD_MORE_THRESHOLD = 500; 
 
+// The number of images to request from the Unsplash API at a time.
+const FETCH_IMAGE_COUNT = 20;
+
 function App() {
   
   const windowSize = useWindowSize();
@@ -33,16 +36,16 @@ function App() {
   const [images, setImages] = useState([]);
 
   async function getNextImages(next_page=null){
-
-    const next_page_ind = next_page ?? (images.length/10)+1;
+  
+    const next_page_ind = next_page ?? (images.length/FETCH_IMAGE_COUNT)+1;
 
     if( searchQuery ){
 
-      return await Unsplash.getSearchImages(searchQuery, next_page_ind);
+      return await Unsplash.getSearchImages(searchQuery, FETCH_IMAGE_COUNT, next_page_ind);
 
     }else{
 
-      return await Unsplash.getImages(next_page_ind);
+      return await Unsplash.getImages(FETCH_IMAGE_COUNT, next_page_ind);
     }
   }
 
@@ -50,7 +53,7 @@ function App() {
 
     setSearchQuery(new_search_value);
 
-    setImages( await Unsplash.getSearchImages(new_search_value, 1) );
+    setImages( await Unsplash.getSearchImages(new_search_value, FETCH_IMAGE_COUNT, 1) );
 
     // The page is going to need repopulated because we're clearing out all images. 
     initialLoadedRef.current = false;
