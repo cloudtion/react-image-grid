@@ -1,17 +1,20 @@
 
-import { useState, useRef } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import React, { useState, useRef } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
+interface SearchProps {
+    onSearch? : (value : string)=> void   
+}
 
 // Accepts Props: 
 // "onSearch" - Function - Callback with the entered search value on blur or when the user presses enter. 
-export default function Search(props){
+export default function Search(props : SearchProps) : React.ReactElement {
     
-    const [open, setOpen] = useState(false);
-    const [value, setValue] = useState('');
+    const [open, setOpen] = useState<boolean>(false);
+    const [value, setValue] = useState<string>("");
 
-    const inputRef = useRef(null);
+    const inputRef = useRef<HTMLInputElement | null>(null);
 
     function toggleSearch(){
 
@@ -30,16 +33,15 @@ export default function Search(props){
     function triggerSearch(){
 
         props.onSearch && props.onSearch(value);
-
     }
 
-    function keyDown(e){
+    function keyDown(e : React.KeyboardEvent<HTMLInputElement>){
 
-        if(e.key === 'Enter'){
+        if( e.key === "Enter" && e.target ){
 
             // Pull the focus off the search bar to hide flashing carot.
             // Because of our "onBlur" callback, this also calls "triggerSearch".
-            e.target.blur();
+            (e.target as HTMLElement).blur();
         }
     }
 

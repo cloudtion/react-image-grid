@@ -1,11 +1,11 @@
 
-import {useEffect, useState, useRef} from 'react';
-import {useWindowScroll, useWindowSize} from './hooks';
-import * as Unsplash from './UnsplashImages';
+import React, {useEffect, useState, useRef} from "react";
+import {useWindowScroll, useWindowSize} from "./hooks";
+import * as Unsplash from "./UnsplashImages";
 
-import ImageGrid from './ImageGrid';
-import Lightbox from './Lightbox';
-import Search from './Search';
+import ImageGrid from "./ImageGrid";
+import Lightbox from "./Lightbox";
+import Search from "./Search";
 
 
 // Number of pixels remaining to be scrolled when we load additional images.
@@ -15,25 +15,25 @@ const LOAD_MORE_THRESHOLD = 500;
 // The number of images to request from the Unsplash API at a time.
 const FETCH_IMAGE_COUNT = 20;
 
-function App() {
+export default function App() : React.ReactElement {
   
-  const windowSize = useWindowSize();
-  const windowScroll = useWindowScroll();
+  const [windowWidth, windowHeight] = useWindowSize();
+  const [,scrollY] = useWindowScroll();
 
   // Used to mark that an API request is in progress.
-  const isLoadingRef = useRef(false);
+  const isLoadingRef = useRef<boolean>(false);
   
   // Used to flag when the page has been initially filled with pictures.
-  const initialLoadedRef = useRef(false);
+  const initialLoadedRef = useRef<boolean>(false);
 
   // Used to flag when the API returns the last results of a query.
   // This prevents scrolling after the last results from continuing to call the API.
-  const allImagesLoadedRef = useRef(false);
+  const allImagesLoadedRef = useRef<boolean>(false);
 
-  const [lightboxImgInd, setLightboxImgInd] = useState(null);
-  const [searchQuery, setSearchQuery] = useState(null);
+  const [lightboxImgInd, setLightboxImgInd] = useState<number | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string | null>(null);
 
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState<any[]>([]);
 
   async function getNextImages(next_page=null){
   
@@ -49,8 +49,11 @@ function App() {
     }
   }
 
-  async function searchChanged(new_search_value){
-
+  async function searchChanged(new_search_value : string){
+    
+    // Scroll to the top of the page so we don't start loading multiple pages of results when the search query first changes.
+    window.scroll(0,scrollY*-1);
+    
     setSearchQuery(new_search_value);
 
     setImages( await Unsplash.getSearchImages(new_search_value, FETCH_IMAGE_COUNT, 1) );
@@ -63,16 +66,16 @@ function App() {
     allImagesLoadedRef.current = false;
   }   
 
-  function checkLoadImages(chained_images = null){
+  function checkLoadImages(){
     
     // When the window is scrolled, we need to check whether we need to load more images or not.
     // If there is already an API call in progress (isLoadingRef), 
     // if the API has already indicated that we're at the end of the results (allImagesLoadedRef),
     // or if the window scroll threshold isn't yet met (LOAD_MORE_THRESHOLD), then we won't load more images.
 
-    const HIT_SCROLL_THRESHOLD = windowScroll.y + windowSize.height > (document.body.offsetHeight-LOAD_MORE_THRESHOLD); 
-    const PAGE_STILL_EMPTY = document.body.offsetHeight <= windowSize.height;
-    const need_more_images = !isLoadingRef.current && !allImagesLoadedRef.current && (HIT_SCROLL_THRESHOLD|PAGE_STILL_EMPTY);
+    const HIT_SCROLL_THRESHOLD = scrollY + windowHeight > (document.body.offsetHeight-LOAD_MORE_THRESHOLD); 
+    const PAGE_STILL_EMPTY = document.body.offsetHeight <= windowHeight;
+    const need_more_images = !isLoadingRef.current && !allImagesLoadedRef.current && (HIT_SCROLL_THRESHOLD||PAGE_STILL_EMPTY);
 
     if( need_more_images ){
       
@@ -86,7 +89,7 @@ function App() {
             allImagesLoadedRef.current = true;
           }
 
-          setImages( [...(chained_images??images), ...additional_images] );
+          setImages( [...images, ...additional_images] );
 
           isLoadingRef.current = false;
         })
@@ -104,7 +107,7 @@ function App() {
   
 
   return (
-    <div className={"App "+(windowSize.height>windowSize.width? "mobile":"")}>
+    <div className={"App "+(windowHeight>windowWidth? "mobile":"")}>
 
       <Search onSearch={searchChanged}/>
 
@@ -130,5 +133,3 @@ function App() {
     </div>
   );
 }
-
-export default App;

@@ -1,51 +1,60 @@
 import { useEffect, useState, useRef } from "react";
 
 
-export function useWindowSize(){
-
-    const [size, setSize] = useState({width: window.innerWidth, height: window.innerHeight});
+export function useWindowSize() : number[] {
+    
+    const [width, setWidth] = useState<number>(window.innerWidth);
+    const [height, setHeight] = useState<number>(window.innerHeight);
     
     function resized(){
         
-        setSize({width: window.innerWidth, height: window.innerHeight});
+        setWidth(window.innerWidth);
+        setHeight(window.innerHeight);
     }
 
     useEffect(()=>{
 
-        window.addEventListener('resize', resized);
+        window.addEventListener("resize", resized);
 
-        return ()=> window.removeEventListener('resize', resized);
+        return ()=> window.removeEventListener("resize", resized);
 
     }, []);
 
-    return size;
+    return [width, height];
 }
 
 
-export function useWindowScroll(){
+export function useWindowScroll() : number[] {
 
-    const [scrollOffset, setScrollOffset] = useState({x: 0, y: 0});
+    const [scrollX, setScrollX] = useState<number>(0);
+    const [scrollY, setScrollY] = useState<number>(0);
 
-    const lastScrollTimeRef = useRef(0);
-    const lastCalledTimeout = useRef(null);
+    const lastScrollTimeRef = useRef<number>(0);
+    const lastCalledTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     useEffect(()=>{
 
-        function scrolled(){
+        function scrolled() : void {
         
             const curr_time = (new Date()).getTime();
     
             // Debouncing to only allow the scroll to trigger every 200 ms.
             if( curr_time - lastScrollTimeRef.current < 200 ){
-    
-                clearTimeout(lastCalledTimeout.current);
+                
+                if( lastCalledTimeout.current ){
+
+                    clearTimeout(lastCalledTimeout.current);
+                }
+
                 lastCalledTimeout.current = setTimeout(scrolled, 210);
+
                 return;
             }
     
             lastScrollTimeRef.current = curr_time;
-    
-            setScrollOffset({x: window.scrollX, y: window.scrollY});
+            
+            setScrollX(window.scrollX);
+            setScrollY(window.scrollY);
         }
 
         window.addEventListener('scroll', scrolled);
@@ -54,5 +63,5 @@ export function useWindowScroll(){
 
     }, []);
 
-    return scrollOffset;
+    return [scrollX, scrollY];
 }

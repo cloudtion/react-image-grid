@@ -1,11 +1,18 @@
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import React from "react";
 
-export default function LoadingSpinner(props){
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+
+interface OptionalStyle {
+    className?: string,
+    style?: React.CSSProperties;
+}
+
+export default function LoadingSpinner(props:OptionalStyle) : React.ReactElement {
 
     return (
-        <span className="loading-spinner" {...props}>
+        <span className={"loading-spinner "+(props.className??"")} style={props.style}>
             <FontAwesomeIcon icon={faSpinner}/>
         </span>
     );

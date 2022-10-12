@@ -1,6 +1,19 @@
 
+import React from "react";
+
+interface UploaderInfoUser {
+    name : string,
+    profile_image? : string,
+    social? : any,
+    username? : string,
+};
+
+interface UploaderInfoProps {
+    user : UploaderInfoUser,
+};
+
 // Accepts "user" object from unsplash api photo endpoint.
-export default function UploaderInfo(props){
+export default function UploaderInfo(props : UploaderInfoProps) : React.ReactElement {
 
     const {
         name,
@@ -12,11 +25,18 @@ export default function UploaderInfo(props){
     return (
         <div className="user-block">
             
-            <img 
-                className="user-profile-img" 
-                src={profile_image.small} 
-                alt={`${name} (Uploader)`}
-            />
+            {
+                profile_image?
+                
+                    <img 
+                        className="user-profile-img" 
+                        src={profile_image} 
+                        alt={`${name} (Uploader)`}
+                    />
+                    :
+                    null
+            }
+
             <a 
                 target="_blank"
                 rel="noreferrer"

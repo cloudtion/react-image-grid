@@ -1,23 +1,23 @@
 
-import React, { useEffect } from 'react';
-import { useWindowSize } from './hooks';
+import React, { useEffect } from "react";
+import { useWindowSize } from "./hooks";
 
-import LazyLoadImage from './LazyLoadImage';
-import UploaderInfo from './UploaderInfo';
+import LazyLoadImage from "./LazyLoadImage";
+import UploaderInfo from "./UploaderInfo";
 
-// Accepts Props:
-// "image"        - Object   - An image returned from unsplash's API.
-// "onPrev"       - Function - Callback for when the left arrow button is pressed.
-// "onNext"       - Function - Callback for when the right arrow button is pressed.
-// "disablePrev"  - bool     - Disables the left arrow.
-// "onClose"      - Function - Callback for when the close button is pressed.
-export default function Lightbox(props){
+interface LightboxProps {
+    image: any,             // An image returned from unsplash's API.
+    onClose: () => void,    // Callback for when the close button is pressed.
+    onNext: () => void,     // Callback for when the right arrow button is pressed.
+    onPrev: () => void,     // Callback for when the left arrow button is pressed.
+    disablePrev? : boolean,// Disables the left arrow.
+};
 
-    const windowSize = useWindowSize();
+export default function Lightbox(props : LightboxProps) : React.ReactElement {
 
-    const {image} = props;
+    const [windowWidth, windowHeight] = useWindowSize();
     
-    const is_vertical = windowSize.width < windowSize.height;
+    const is_vertical = windowWidth < windowHeight;
 
     useEffect(()=>{
 
@@ -25,9 +25,27 @@ export default function Lightbox(props){
         window.document.body.style.overflowY = 'hidden';
 
         // Closing lightbox, allow scrolling again.
-        return ()=> window.document.body.style.overflowY = 'auto';
+        return ()=>{
+        
+            window.document.body.style.overflowY = 'auto';
+        };
 
     }, []);
+
+    
+    const {image} = props;
+
+    const user = {
+        name: image.user.name, 
+        profile_image: image.user.profile_image.small, 
+        social: image.user.social, 
+        username: image.user.username,
+    };
+
+    const onClick : React.MouseEventHandler<HTMLImageElement> = (event : React.MouseEvent<HTMLElement>) : void =>{
+
+        event.stopPropagation();
+    };      
 
     return (
         <div className="lightbox" onClick={props.onClose}>
@@ -44,8 +62,8 @@ export default function Lightbox(props){
                         className="lightbox-img"
                         src={image.urls.full} 
                         alt={image.alt_description}
-                        onClick={e=> e.stopPropagation()}  // Stop the click from bubbling up so a click on the image itself doesn't close the lightbox.
-                        style={is_vertical? null:{height: '100%'}}
+                        onClick={ onClick }  // Stop the click from bubbling up so a click on the image itself doesn't close the lightbox.
+                        style={is_vertical? undefined: ({height: '100%'} as React.CSSProperties)}
                         showLoadingSpinner={true}
                     />
                 </div>
@@ -54,7 +72,7 @@ export default function Lightbox(props){
                     { image.description }
                 </span>
 
-                <UploaderInfo user={image.user}/> 
+                <UploaderInfo user={user}/> 
 
                 <div className="lightbox-arrows-wrapper">
 
@@ -62,12 +80,12 @@ export default function Lightbox(props){
                         className="lightbox-arrow lightbox-arrow-left" 
                         disabled={props.disablePrev}
                         onClick={e=>{ props.onPrev(); e.stopPropagation()}}
-                    >{'<'}</button>
+                    >{"<"}</button>
     
                     <button 
                         className="lightbox-arrow lightbox-arrow-right"
                         onClick={e=>{ props.onNext(); e.stopPropagation()}}
-                    >{'>'}</button>
+                    >{">"}</button>
                 </div>
             </div>
         </div>

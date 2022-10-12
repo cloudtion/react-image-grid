@@ -1,15 +1,24 @@
 
-import {useState, useRef} from 'react';
-import LoadingSpinner from './LoadingSpinner';
+import React, {useState, useRef} from "react";
+import LoadingSpinner from "./LoadingSpinner";
 
+interface LazyLoadImageProps {
+    alt?: string,
+    showLoadingSpinner? : boolean,
+    className? : string,
+    src: string,
+    style?: React.CSSProperties,
+    onClick?: React.MouseEventHandler<HTMLImageElement>,
+    onLoad?: (img : EventTarget) => void,
+};
 
-export default function LazyLoadImage(props){
+export default function LazyLoadImage(props : LazyLoadImageProps) : React.ReactElement {
 
-    const [imgLoaded, setImgLoaded] = useState(false);
+    const [imgLoaded, setImgLoaded] = useState<boolean>(false);
     
-    const imgRef = useRef(null);
+    const imgRef = useRef<HTMLImageElement | null>(null);
 
-    function onImgLoad(img){
+    function onImgLoad(img : EventTarget){
        
         setImgLoaded(true);
 
@@ -19,13 +28,16 @@ export default function LazyLoadImage(props){
         }
     }   
 
+    const on_click_cb = props.onClick? props.onClick : undefined;
+
     return (
-        <>
+        <React.Fragment>
             <img 
+                className={props.className}
                 ref={imgRef}
                 src={props.src}
                 alt={props.alt}
-                onClick={props.onClick}
+                onClick={on_click_cb}
                 style={{
                     opacity: imgLoaded? 1 : 0, 
                     zIndex: 2,
@@ -39,8 +51,8 @@ export default function LazyLoadImage(props){
                 // Removing the component causes the spinner to briefly stop before being removed.
                 // TODO: Look into the cause of this.
             }
-            <LoadingSpinner style={{opacity: !imgLoaded&props.showLoadingSpinner? 1:0}}/>
+            <LoadingSpinner style={{opacity: (!imgLoaded&&props.showLoadingSpinner)? 1:0}}/>
             
-        </>
+        </React.Fragment>
     )
 }
