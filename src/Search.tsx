@@ -13,6 +13,8 @@ export default function Search(props : SearchProps) : React.ReactElement {
     
     const [open, setOpen] = useState<boolean>(false);
     const [value, setValue] = useState<string>("");
+    
+    const hasChangedRef = useRef<boolean>(false);
 
     const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -31,6 +33,16 @@ export default function Search(props : SearchProps) : React.ReactElement {
     }
 
     function triggerSearch(){
+        
+        // The value hasn't been updated. No need to trigger "onSearch" callback.
+        if( !hasChangedRef.current ){
+
+            return;
+        }
+
+        // Set hasChangedRef to false so that we don't trigger a search change
+        // when the input loses focus or closes.
+        hasChangedRef.current = false;
 
         props.onSearch && props.onSearch(value);
     }
@@ -45,6 +57,15 @@ export default function Search(props : SearchProps) : React.ReactElement {
         }
     }
 
+    function valueChanged(new_value : string){
+
+        setValue(new_value);
+
+        // Set hasChangedRef to true so that we know to trigger a search change
+        // when the input loses focus or closes.
+        hasChangedRef.current = true;
+    }
+
     return (
         <div 
             id="search" 
@@ -57,7 +78,7 @@ export default function Search(props : SearchProps) : React.ReactElement {
                 type="text" 
                 placeholder="Search Photos"
                 onClick={e=> e.stopPropagation()}
-                onChange={e=> setValue(e.target.value)}
+                onChange={e=> valueChanged(e.target.value)}
                 onKeyDown={keyDown}
                 onBlur={triggerSearch}
                 value={value}
