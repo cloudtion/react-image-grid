@@ -84,5 +84,5 @@ export default function Search(props : SearchProps) : React.ReactElement {
                 value={value}
             />
         </div>
-    )
+    );
 }

@@ -1,3 +1,8 @@
+:root {
+  --brand-color: #78d7e6;
+  --brand-color-darker: #64bac7;
+}
+
 *{
   box-sizing: border-box;
 }
@@ -16,6 +21,69 @@ body {
 
 button{
   cursor: pointer;
+}
+
+#homepage-header{
+  width: 100%;
+  height: 80vh;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: relative;
+}
+
+#homepage-header img{
+  width: 25%;
+  max-width: 100px;
+}
+
+#logo-holder{
+  display: flex;
+  max-width: 80vw;
+}
+
+#header-tagline{
+  font-size: 1.25em;
+  text-align: center;
+}
+
+#github-link img{
+  width: 20px;
+}
+
+#github-link{
+  background-color: #ebf0f4;
+  color: black;
+  border: 1px solid gray;
+  border-radius: 3px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 3px 5px;
+  position: absolute;
+  top: 1em;
+  right: 1em;
+}
+
+#github-link span{
+  display: inline-block;
+  margin-left: 4px;  
+}
+
+#logo-holder h1{
+  color: var(--brand-color);
+  padding: 0.4em 0.5em 0.5em 0.5em;
+  font-size: 48px;
+}
+
+/* If the screen size is 600px wide or less, set the font-size of <div> to 30px */
+@media screen and (max-width: 600px) {
+  #logo-holder h1{
+    font-size: 35px;
+  }
 }
 
 .lightbox {
@@ -257,6 +325,19 @@ button{
   cursor: pointer;
 }
 
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #b8b8b8;
+  opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: #b8b8b8;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+  color: #b8b8b8;
+}
+
 #search.search-open {
   width: 15em;
   color: rgba(255,255,255,1);
@@ -293,4 +374,26 @@ button{
 
 #search svg {
   font-size: 1.5em;
+}
+
+.down-arrow{
+  width: 0; 
+  height: 0; 
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-top: 20px solid var(--brand-color-darker);
+}
+
+#check-it-out{
+  color: var(--brand-color-darker);
+  font-size: 1.4em;
+  position: absolute;
+  bottom: 2em;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#homepage-header .down-arrow{
+  margin: auto;
+  margin-top: 0.5em;
 }

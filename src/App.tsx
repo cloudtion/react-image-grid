@@ -6,6 +6,7 @@ import * as Unsplash from "./UnsplashImages";
 import ImageGrid from "./ImageGrid";
 import Lightbox from "./Lightbox";
 import Search from "./Search";
+import HomePageHeader from "./ExamplePageHeader";
 
 
 // Number of pixels remaining to be scrolled when we load additional images.
@@ -102,12 +103,25 @@ export default function App() : React.ReactElement {
     
     // After each render, check if we need to load more images.
     checkLoadImages();
-    
   });
   
+  const current_img = lightboxImgInd!==null? images[lightboxImgInd] : null;
+
+  const lightbox_img = current_img? {
+    src: current_img.urls.full,
+    alt: current_img.alt_description,
+    description: current_img.description,
+    author: {
+      name: current_img.user.name,
+      link: current_img.user.portfolio_url,
+      profile_img_src: current_img.user.profile_image.small,
+    }
+  } : null;
 
   return (
     <div className={"App "+(windowHeight>windowWidth? "mobile":"")}>
+
+      <HomePageHeader/>
 
       <Search onSearch={searchChanged}/>
 
@@ -117,10 +131,10 @@ export default function App() : React.ReactElement {
       />
 
       {
-        lightboxImgInd!==null?
+        lightboxImgInd!==null && lightbox_img!==null?
           <Lightbox
             key={lightboxImgInd}
-            image={images[lightboxImgInd]}
+            image={lightbox_img}
             onNext={()=> setLightboxImgInd((lightboxImgInd + 1) % images.length)}
             onPrev={() => setLightboxImgInd(lightboxImgInd - 1)}
             disablePrev={lightboxImgInd===0}

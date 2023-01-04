@@ -11,7 +11,7 @@ interface ImageGridProps {
 }
 
 interface ColumnHeightTally {
-    col_ind: number, // Divide the window width by this number and round it to calculate the number of columns that will be used. 
+    col_ind: number, // Divide the window width by this number and round it to calculate the number of columns that will be used.
     height: number,  // Sets the minimum number of columns that will be used, overwriting the column count calculated by the column threshold.
 }
 

@@ -3,10 +3,23 @@ import React, { useEffect } from "react";
 import { useWindowSize } from "./hooks";
 
 import LazyLoadImage from "./LazyLoadImage";
-import UploaderInfo from "./UploaderInfo";
+import AuthorInfo from "./AuthorInfo";
+
+interface Author {
+    name? : string,
+    profile_img_src? : string,
+    link? : string,
+}
+
+interface Image {
+    src : string,
+    alt? : string,
+    author? : Author,
+    description? : string,
+}
 
 interface LightboxProps {
-    image: any,             // An image returned from unsplash's API.
+    image: Image,             // An image returned from unsplash's API.
     onClose: () => void,    // Callback for when the close button is pressed.
     onNext: () => void,     // Callback for when the right arrow button is pressed.
     onPrev: () => void,     // Callback for when the left arrow button is pressed.
@@ -34,13 +47,7 @@ export default function Lightbox(props : LightboxProps) : React.ReactElement {
 
     
     const {image} = props;
-
-    const user = {
-        name: image.user.name, 
-        profile_image: image.user.profile_image.small, 
-        social: image.user.social, 
-        username: image.user.username,
-    };
+    const {author} = image;
 
     const onClick : React.MouseEventHandler<HTMLImageElement> = (event : React.MouseEvent<HTMLElement>) : void =>{
 
@@ -60,8 +67,8 @@ export default function Lightbox(props : LightboxProps) : React.ReactElement {
                 <div className="lightbox-img-wrapper">
                     <LazyLoadImage 
                         className="lightbox-img"
-                        src={image.urls.full} 
-                        alt={image.alt_description}
+                        src={image.src} 
+                        alt={image.alt}
                         onClick={ onClick }  // Stop the click from bubbling up so a click on the image itself doesn't close the lightbox.
                         style={is_vertical? undefined: ({height: '100%'} as React.CSSProperties)}
                         showLoadingSpinner={true}
@@ -72,8 +79,13 @@ export default function Lightbox(props : LightboxProps) : React.ReactElement {
                     { image.description }
                 </span>
 
-                <UploaderInfo user={user}/> 
-
+                {
+                    author?
+                        <AuthorInfo author={author}/> 
+                        :
+                        null
+                }
+                
                 <div className="lightbox-arrows-wrapper">
 
                     <button 

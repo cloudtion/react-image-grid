@@ -1,5 +1,5 @@
-import { useEffect, useState, useRef } from "react";
 
+import { useEffect, useState, useRef } from "react";
 
 export function useWindowSize() : number[] {
     
@@ -22,7 +22,6 @@ export function useWindowSize() : number[] {
 
     return [width, height];
 }
-
 
 export function useWindowScroll() : number[] {
 
