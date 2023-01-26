@@ -1,27 +1,31 @@
 
 const path = require('path');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
-const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
   mode: process.env.NODE_ENV,
-  entry: path.join(__dirname, 'src', 'index.tsx'),
+  entry: path.join(__dirname, '..', '..', 'example', 'index.tsx'),
   devtool: 'inline-source-map',
   plugins: [
-    new Dotenv(),
     new CaseSensitivePathsPlugin(),
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'src', 'index.ejs'),
-      templateParameters: {PUBLIC_URL: '/'}
+      title: 'React Img Grid',
     }),
   ],
   module: {
     rules: [
       {
-        test: /\.css$/i,
-        use: ["style-loader", "css-loader"],
+        test: /\.s?css$/i,
+        use: [
+          // Creates `style` nodes from JS strings
+          "style-loader",
+          // Translates CSS into CommonJS
+          "css-loader",
+          // Compiles Sass to CSS
+          "sass-loader",
+        ],
       },
       {
         test: /\.(png|jpe?g|gif|svg|ico)$/i,
@@ -33,7 +37,12 @@ module.exports = {
       },
       {
         test: /\.tsx?$/,
-        use: 'ts-loader',
+        use: {
+          loader: 'ts-loader',
+          options: {
+            configFile: path.join(__dirname, 'tsconfig.json')
+          }
+        },
         exclude: /node_modules/,
       },
     ],
@@ -46,7 +55,7 @@ module.exports = {
     minimizer: [new TerserPlugin()],
   },
   output: {
-    filename: '[contenthash].bundle.js',
-    path: path.resolve(__dirname, 'dist'),
+    filename: 'react-image-grid.[contenthash].js',
+    path: path.join(__dirname, '..', '..', 'example_build')
   },
 };

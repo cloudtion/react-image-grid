@@ -45,8 +45,8 @@
     "workbox-webpack-plugin": "^6.4.1"
   },
   "scripts": {
-    "dev": "npx webpack-dev-server --mode development",
-    "build": "npx webpack --mode production",
+    "start": "npx webpack-dev-server --config config/example-app/webpack.config.js --mode development",
+    "build-example": "npx webpack --config config/example-app/webpack.config.js --mode production",
     "deploy": "firebase deploy"
   },
   "prepublish": "npx tsc",
@@ -75,6 +75,7 @@
     "@svgr/webpack": "^6.5.1",
     "dotenv-webpack": "^8.0.1",
     "file-loader": "^6.2.0",
+    "sass": "^1.57.1",
     "svg-inline-loader": "^0.8.2"
   },
   "babel": {

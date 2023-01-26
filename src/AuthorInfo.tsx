@@ -1,23 +1,15 @@
 
 import React from "react";
+import { ImageAuthor } from "./ImageGrid";
 
-interface Author {
-    name? : string,
-    profile_img_src? : string,
-    link? : string,
-}
-
-interface AuthorInfoProps {
-    author : Author,
-};
 
 // Accepts "user" object from unsplash api photo endpoint.
-export default function AuthorInfo(props : AuthorInfoProps) : React.ReactElement {
+export default function AuthorInfo(props : {author: ImageAuthor}) : React.ReactElement {
 
     const {
         name,
         profile_img_src,
-        link,
+        url,
     } = props.author;
     
     return (
@@ -36,13 +28,13 @@ export default function AuthorInfo(props : AuthorInfoProps) : React.ReactElement
             }
 
             {
-                link?
+                url?
                     
                     <a 
                         target="_blank"
                         rel="noreferrer"
                         className={"user-name has-portfolio"} 
-                        href={link}
+                        href={url}
                     >
                         { name }
                     </a>

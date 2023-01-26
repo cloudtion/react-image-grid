@@ -12,7 +12,7 @@ interface OptionalStyle {
 export default function LoadingSpinner(props:OptionalStyle) : React.ReactElement {
 
     return (
-        <span className={"loading-spinner "+(props.className??"")} style={props.style}>
+        <span className={"img-grid-loading-spinner "+(props.className??"")} style={props.style}>
             <FontAwesomeIcon icon={faSpinner}/>
         </span>
     );

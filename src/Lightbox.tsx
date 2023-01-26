@@ -4,22 +4,11 @@ import { useWindowSize } from "./hooks";
 
 import LazyLoadImage from "./LazyLoadImage";
 import AuthorInfo from "./AuthorInfo";
+import { ImageGridImage, ImageAuthor } from "./ImageGrid";
 
-interface Author {
-    name? : string,
-    profile_img_src? : string,
-    link? : string,
-}
-
-interface Image {
-    src : string,
-    alt? : string,
-    author? : Author,
-    description? : string,
-}
 
 interface LightboxProps {
-    image: Image,             // An image returned from unsplash's API.
+    image: ImageGridImage,  
     onClose: () => void,    // Callback for when the close button is pressed.
     onNext: () => void,     // Callback for when the right arrow button is pressed.
     onPrev: () => void,     // Callback for when the left arrow button is pressed.
@@ -55,7 +44,7 @@ export default function Lightbox(props : LightboxProps) : React.ReactElement {
     };      
 
     return (
-        <div className="lightbox" onClick={props.onClose}>
+        <div className="img-grid-lightbox" onClick={props.onClose}>
 
             <button 
                 className="lightbox-close-button"

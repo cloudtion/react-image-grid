@@ -1,5 +1,5 @@
 
-import React, {useState, useRef} from "react";
+import React, {useState, useRef, Fragment} from "react";
 import LoadingSpinner from "./LoadingSpinner";
 
 interface LazyLoadImageProps {
@@ -9,7 +9,7 @@ interface LazyLoadImageProps {
     src: string,
     style?: React.CSSProperties,
     onClick?: React.MouseEventHandler<HTMLImageElement>,
-    onLoad?: (img : EventTarget) => void,
+    onLoad?: (loaded_src : string) => void,
 };
 
 export default function LazyLoadImage(props : LazyLoadImageProps) : React.ReactElement {
@@ -18,20 +18,20 @@ export default function LazyLoadImage(props : LazyLoadImageProps) : React.ReactE
     
     const imgRef = useRef<HTMLImageElement | null>(null);
 
-    function onImgLoad(img : EventTarget){
+    function onImgLoad(e : any){
        
         setImgLoaded(true);
 
         if( props.onLoad ){
 
-            props.onLoad(img);
+            props.onLoad(e);
         }
     }   
 
     const on_click_cb = props.onClick? props.onClick : undefined;
 
     return (
-        <React.Fragment>
+        <Fragment>
             <img 
                 className={props.className}
                 ref={imgRef}
@@ -43,7 +43,7 @@ export default function LazyLoadImage(props : LazyLoadImageProps) : React.ReactE
                     zIndex: 2,
                     ...props.style,
                 }}
-                onLoad={e=> onImgLoad(e.target)}
+                onLoad={onImgLoad}
             />
 
             {
@@ -53,6 +53,6 @@ export default function LazyLoadImage(props : LazyLoadImageProps) : React.ReactE
             }
             <LoadingSpinner style={{opacity: (!imgLoaded&&props.showLoadingSpinner)? 1:0}}/>
             
-        </React.Fragment>
+        </Fragment>
     )
 }

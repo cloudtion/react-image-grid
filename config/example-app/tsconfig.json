@@ -4,19 +4,19 @@
     /* Language and Environment */
     "target": "es2016",                                  /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
     "jsx": "react",                                /* Specify what JSX code is generated. */
-    "outDir": "./build/js",
+    "outDir": "../../example_build/types",
 
     /* Modules */
     "module": "commonjs",                                /* Specify what module code is generated. */
     "declaration": true,                                 /* Generate .d.ts files from TypeScript and JavaScript files in your project. */
     "esModuleInterop": true, 
     "forceConsistentCasingInFileNames": true,            /* Ensure that casing is correct in imports. */
-
+    "resolveJsonModule": true,
+    
     /* Type Checking */
     "strict": true,                                      /* Enable all strict type-checking options. */
     "skipLibCheck": true,                                /* Skip type checking all .d.ts files. */
 
   },
-  "include": ["src/components", "src/custom.d.ts"]
-
+  "include": ["../../example/custom.d.ts"]
 }
